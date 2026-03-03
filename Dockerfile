@@ -1,15 +1,17 @@
-FROM ubuntu:latest
+# Use an official Ocaml image as base
+FROM ocaml/opam:ubuntu-22.04-ocaml-5.4
 
-RUN apt-get update && apt-get install -y dos2unix
-
+# set the working directory
 WORKDIR /app
 
-COPY calculator.sh /app/calculator.sh
+# copy project source to container
+COPY /src /app
 
-# convert line endings to unix style
-RUN dos2unix /app/calculator.sh
+# install requirements
 
-# ensure script has execute permission
-RUN chmod +x /app/calculator.sh
 
-CMD ["bash", "/app/calculator.sh"]
+# set execute permissions for ocaml files
+RUN chmod +x /app/calculator/calculator.ml /app/tests/calculator_test.ml
+
+# run calculator program 
+CMD ["ocaml", "/app/src/calculator/calculator.ml"]

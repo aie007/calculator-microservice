@@ -1,23 +1,26 @@
 ---
-- name: Pull Docker Image from Docker Hub
-  hosts: localhost
-  remote_user: nasir
-  become: false
+- name: Pull Calculator App from Docker Hub
+  hosts: myhosts
   tasks: 
-   - name: Pull Docker Image
-     docker_image:
-       name: "iiitb/calculator"
+   - name: Install Docker
+     apt:
+       name: docker.io
+       state: present
+
+   - name: Pull the latest Docker image
+     community.docker.docker_image:
+       name: "aie007/scientific-calculator:latest"
        source: pull
-     register: docker_pull_result
 
-   - name: Display Docker Pull Result
-     debug:
-       var: docker_pull_result
+   - name: Stop and remove existing container if any
+     community.docker.docker_container:
+       name: scientific-calculator
+       state: absent	
 
-   - name: Start Docker service
-       service:
-         name: docker
+   - name: Run new container
+       community.docker.docker_container:
+         name: scientific-calculator
+	 image: aie007/scientific-calculator:latest
          state: started
-
-   - name: Running container
-     shell: docker run -it -d --name calculator iiitb/calculator
+	 restart_policy: always
+	 interactive: true
