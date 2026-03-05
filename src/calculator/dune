@@ -1,0 +1,8 @@
+(library
+	(name calculator_lib)
+	(modules calculator))
+
+(executable
+	(name app)
+	(libraries calculator_lib)
+	(modules app))
