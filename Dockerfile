@@ -1,17 +1,14 @@
-# Use an official Ocaml image as base
-FROM ocaml/opam:ubuntu-22.04-ocaml-5.4
+# Use an Ocaml image as base
+FROM aie007/ubuntu-ocaml:5.4-dune-installed
+
+# copy project source to container
+COPY . /app
 
 # set the working directory
 WORKDIR /app
 
-# copy project source to container
-COPY /src /app
-
-# install requirements
-
-
 # set execute permissions for ocaml files
-RUN chmod +x /app/calculator/calculator.ml /app/tests/calculator_test.ml
+RUN chmod -R +x /app
 
 # run calculator program 
-CMD ["ocaml", "/app/src/calculator/calculator.ml"]
+CMD ["dune", "exec", "./src/calculator/app.exe"]
