@@ -109,8 +109,7 @@ pipeline {
 						<li>URL: 		<a href="${env.BUILD_URL}">${env.BUILD_URL}</a></li>
 					</ul>
 			      	      """,
-				mimeType: 'text/html', 
-				attachLog: true
+				mimeType: 'text/html'
 			)
 		}
 	}
