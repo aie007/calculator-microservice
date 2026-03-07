@@ -9,18 +9,18 @@
 
    - name: Pull the latest Docker image
      community.docker.docker_image:
-       name: "aie007/scientific-calculator:latest"
+       name: "aie007/calc:latest"
        source: pull
 
    - name: Stop and remove existing container if any
      community.docker.docker_container:
-       name: scientific-calculator
+       name: calc
        state: absent	
 
    - name: Run new container
        community.docker.docker_container:
-         name: scientific-calculator
-	 image: aie007/scientific-calculator:latest
+         name: calc
+	 image: aie007/calc:latest
          state: started
 	 restart_policy: always
 	 interactive: true
