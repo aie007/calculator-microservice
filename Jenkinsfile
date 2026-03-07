@@ -80,31 +80,38 @@ pipeline {
 
 	post {
 		success {
-			mail to: "${EMAIL_TO}",
-			subject: "SUCCESS: Job '${env.JOB_NAME} [Build No. ${env.BUILD_NUMBER}]'",
-			body: """
-				<p>Build successful for <b>${env.JOB_NAME}</b> on build number <b>${env.BUILD_NUMBER}</b>.</p>
-				<p>Details: </p>
-				<ul>
-					<li>Job: 		${env.JOB_NAME}</li>
-					<li>Build Number: 	${env.BUILD_NUMBER}</li>
-					<li>URL: 		${env.BUILD_URL}</li>
-				</ul>
-			      """
+			mail (
+				to: "${EMAIL_TO}, aieshah9241@gmail.com",
+				subject: "Jenkins Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+				body: """
+					<p>Build successful for <b>${env.JOB_NAME}</b> on build number <b>${env.BUILD_NUMBER}</b>.</p>
+					<p>Details: </p>
+					<ul>
+						<li>Job: 		${env.JOB_NAME}</li>
+						<li>Build Number: 	${env.BUILD_NUMBER}</li>
+						<li>URL: 		<a href="${env.BUILD_URL}">${env.BUILD_URL}</a></li>
+					</ul>
+			      	      """,
+				mimeType: 'text/html'
+			)
 		}
 		
 		failure {
-			mail to: "${EMAIL_TO}",
-			subject: "FAILURE: Job '${env.JOB_NAME} [Build No. ${env.BUILD_NUMBER}]'",
-			body: """
-				<p>Build failed for <b>${env.JOB_NAME}</b> on build number <b>${env.BUILD_NUMBER}</b>.</p>
-				<p>Details: </p>
-				<ul>
-					<li>Job: 		${env.JOB_NAME}</li>
-					<li>Build Number: 	${env.BUILD_NUMBER}</li>
-					<li>URL: 		${env.BUILD_URL}</li>
-				</ul>
-			      """
+			mail (
+				to: "${EMAIL_TO}, aieshah9241@gmail.com",
+				subject: "Jenkins Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+				body: """
+					<p>Build failed for <b>${env.JOB_NAME}</b> on build number <b>${env.BUILD_NUMBER}</b>. Check attached console log.</p>
+					<p>Details: </p>
+					<ul>
+						<li>Job: 		${env.JOB_NAME}</li>
+						<li>Build Number: 	${env.BUILD_NUMBER}</li>
+						<li>URL: 		<a href="${env.BUILD_URL}">${env.BUILD_URL}</a></li>
+					</ul>
+			      	      """,
+				mimeType: 'text/html', 
+				attachLog: true
+			)
 		}
 	}
 }
