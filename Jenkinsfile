@@ -60,7 +60,7 @@ pipeline {
 		stage ('push docker image') {
 			steps {
 				script {
-					docker.withRegistry('', 'DockerCred') {
+					docker.withRegistry('', 'DockerHubCred') {
 						sh "docker push ${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME}:latest"
 					}
 				}
