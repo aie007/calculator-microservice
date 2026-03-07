@@ -11,7 +11,7 @@ WORKDIR /app
 RUN chmod -R +x /app
 
 # install dependencies
-RUN opam install ounit2
+RUN opam install -y ounit2
 
 # run calculator program 
 CMD ["dune", "exec", "./src/calculator/app.exe"]
