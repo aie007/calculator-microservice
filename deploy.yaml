@@ -1,26 +1,32 @@
 ---
-- name: Pull Calculator App from Docker Hub
+- name: Deploy Calculator App with Docker
   hosts: myhosts
+  remote_user: nasir
+  become: false
   tasks: 
-   - name: Install Docker
-     apt: 
-       name: docker.io
-       state: present
+   - name: Enable docker
+     ansible.builtin.service:
+       name: docker
+       state: started
 
-   - name: Pull the latest Docker image
+   - name: Pull calc image from docker hub
      community.docker.docker_image: 
-       name: "aie007/calc:latest"
+       name: 'aie007/calc:latest'
        source: pull
+     register: docker_pull_result
+   
+   - name: Display docker pull result
+     ansible.builtin.debug:
+       var: docker_pull_result	
 
-   - name: Stop and remove existing container if any
-     community.docker.docker_container: 
+   - name: Remove existing container if it exists
+     community.docker.docker_container:
        name: calc
-       state: absent	
+       state: absent
 
    - name: Run new container
-       community.docker.docker_container: 
-         name: calc
-	 image: aie007/calc:latest
-         state: started
-	 restart_policy: always
-	 interactive: true
+     community.docker.docker_container: 
+       name: calc
+       image: aie007/calc:latest
+       state: started
+       interactive: true
