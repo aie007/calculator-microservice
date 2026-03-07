@@ -16,44 +16,44 @@ pipeline {
 	stages {
 		stage('git checkout') {
 			steps {
-				git branch: 'main', credentialsId: 'github_credentials', url: '${GITHUB_REPO_URL}'
+				git branch: 'main', url: "${GITHUB_REPO_URL}"
 			}
 		}
 
 		stage('cleanup') {
 			steps {
-				sh '''
-				echo "Cleaning old containers if any"
+				sh """
+				echo 'Cleaning old containers if any'
 				docker stop $CONTAINER_NAME || true
 				docker rm -f $CONTAINER_NAME || true
-				'''
+				"""
 			}
 		}
 
 		stage('build image') {
 			steps {
 				script {
-					docker.build('${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME}', '.')
+					docker.build("${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME}", '.')
 				}
 			}
 		}
 		
 		stage('run unit tests') {
 			steps {
-				sh '''
-				echo "running unit tests in tmp container"
+				sh """
+				echo 'running unit tests in tmp container'
 				docker run --name ${CONTAINER_NAME} ${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME} dune exec ./src/tests/calculator_test.exe
-				'''
+				"""
 			}
 		}
 
 		stage ('remove test container') {
 			steps {
-				sh '''
-				echo "cleaning test container"
+				sh """
+				echo 'cleaning test container'
 				docker stop ${CONTAINER_NAME} || true
 				docker rm -f ${CONTAINER_NAME} || true
-				'''
+				"""
 			}
 		}
 		
@@ -61,7 +61,7 @@ pipeline {
 			steps {
 				script {
 					docker.withRegistry('', 'DockerCred') {
-						sh 'docker push ${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME}:latest'
+						sh "docker push ${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME}:latest"
 					}
 				}
 			}
@@ -78,15 +78,15 @@ pipeline {
 
 	post {
 		success {
-			mail to: '${EMAIL_TO},aieshah9241@gmail.com',
-			subject: 'SUCCESS: Job "${env.JOB_NAME} [${env.BUILD_NUMBER}]"',
-			body: 'Build successful for ${env.JOB_NAME} - ${env.BUILD_NUMBER}. Check details here - ${env.BUILD_URL}'
+			mail to: "${EMAIL_TO},aieshah9241@gmail.com",
+			subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+			body: "Build successful for ${env.JOB_NAME} - ${env.BUILD_NUMBER}. Check details here - ${env.BUILD_URL}"
 		}
 		
 		failure {
-			mail to: '${EMAIL_TO},aieshah9241@gmail.com',
-			subject: 'FAILURE: Job "${env.JOB_NAME} [${env.BUILD_NUMBER}]"',
-			body: 'Build failed for ${env.JOB_NAME} - ${env.BUILD_NUMBER}. Check details here - ${env.BUILD_URL}'
+			mail to: "${EMAIL_TO},aieshah9241@gmail.com",
+			subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+			body: "Build failed for ${env.JOB_NAME} - ${env.BUILD_NUMBER}. Check details here - ${env.BUILD_URL}"
 		}
 	}
 }
