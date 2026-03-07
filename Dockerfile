@@ -10,5 +10,8 @@ WORKDIR /app
 # set execute permissions for ocaml files
 RUN chmod -R +x /app
 
+# install dependencies
+RUN opam install ounit2
+
 # run calculator program 
 CMD ["dune", "exec", "./src/calculator/app.exe"]
