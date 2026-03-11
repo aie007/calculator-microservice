@@ -30,3 +30,4 @@
        image: aie007/calc:latest
        state: started
        interactive: true
+       restart_policy: always
